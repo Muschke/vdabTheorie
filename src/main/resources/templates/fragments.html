@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>fragments</title>
+<head th:fragment="head(title)">
+    <title th:text="${title}"></title>
+    <link rel="icon" th:href="@{/images/luigi.ico}" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/css/luigi.css}">
 </head>
 <body>
 <div xmlns:th="http://www.thymeleaf.org">
     <nav th:fragment="menu">
         <ul>
-            <li th:href = "@{/}"><a>Welkom</a></li>
-            <li th:href = "@{/pizzas}"><a>Pizza's</a></li>
+            <li><a th:href="@{/}">Welkom</a></li>
+            <li><a th:href="@{/pizzas}">Pizza's</a></li>
+            <li><a th:href="@{/kleuren}">Kleur</a></li>
         </ul>
     </nav>
-    <head th:fragment="head(title)">
-        <title th:text="${title}"></title>
-        <link rel="icon" th:href="@{images/luigi.ico}" type="image/x-icon">
-        <link rel="stylesheet" th:href="@{css/luigi.css}">
-    </head>
     <table th:fragment="pizzaTabel(pizzas)" id="pizzatabel">
         <thead>
         <th>Naam</th>

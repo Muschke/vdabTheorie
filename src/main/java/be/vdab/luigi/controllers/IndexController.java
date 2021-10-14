@@ -1,18 +1,23 @@
 package be.vdab.luigi.controllers;
-
 import be.vdab.luigi.domain.Adres;
 import be.vdab.luigi.domain.Persoon;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Controller
 @RequestMapping("/")
-public class IndexController {
+class IndexController {
+    private final AtomicInteger aantalBezoeken = new AtomicInteger();
     @GetMapping
     public ModelAndView index() {
         var morgenOfMiddag = LocalTime.now().getHour() < 12 ? "morgen" : "middag";
@@ -20,6 +25,7 @@ public class IndexController {
         modelAndView.addObject("zaakvoerder",
         new Persoon("Luigi", "Peperone", 7, true, LocalDate.of(1966, 1, 31),
         new Adres("Grote markt", "3", 9700, "Oudenaarde")));
+        modelAndView.addObject("aantalBezoeken", aantalBezoeken.incrementAndGet());
         return modelAndView;
     }
 
