@@ -10,6 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("pizzas")
@@ -21,6 +23,16 @@ class PizzaController {
             new Pizza(3 , "Calzone", BigDecimal.valueOf(4), false),
             new Pizza(4, "PestoPaprika", BigDecimal.valueOf(7), true)
     };
+    /*variabele bij getmapping prijzen, filtering van unieke prijzen in lijst*/
+    private List<BigDecimal> uniekePrijzen() {
+        return Arrays.stream(pizzas).map(Pizza::getPrijs).distinct().sorted().collect(Collectors.toList());
+    }
+    /*variabele om lijst te krijgen met pizzas van elke unieke prijz*/
+    private List<Pizza> pizzasMetPrijs(BigDecimal prijs) {
+        return Arrays.stream(pizzas)
+                .filter(pizza -> pizza.getPrijs().compareTo(prijs) == 0)
+                .collect(Collectors.toList());
+    }
     @GetMapping
     public ModelAndView pizzas() {
         return new ModelAndView("pizzas", "pizzas", pizzas);
@@ -31,5 +43,15 @@ class PizzaController {
         Arrays.stream(pizzas).filter(pizza -> pizza.getId() == id).findFirst()
                 .ifPresent(pizza -> modelAndView.addObject("pizza", pizza));
         return modelAndView;
+    }
+    /*getmapping voor prijzen, geeft lijst weer in die pagina met unieke prijzen*/
+    @GetMapping("prijzen")
+    public ModelAndView prijzen() {
+        return new ModelAndView("prijzen", "prijzen", uniekePrijzen());
+    }
+    /*getmapping voor elke unieke prijspagina*/
+    @GetMapping("prijzen/{prijs}")
+    public ModelAndView pizzasMetEenPrijs(@PathVariable BigDecimal prijs) {
+        return new ModelAndView("prijzen", "pizzas", pizzasMetPrijs(prijs));
     }
 }
