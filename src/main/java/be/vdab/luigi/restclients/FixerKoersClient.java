@@ -2,6 +2,7 @@ package be.vdab.luigi.restclients;
 
 import be.vdab.luigi.exceptions.KoersClientException;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ class FixerKoersClient implements KoersClient {
     private final static Pattern PATTERN = Pattern.compile("^.*\"USD\": *(\\d+\\.?\\d*).*$");
     private final URL url;
 
+    /* Deze constructor is niet aan te raden omdat URL kunnen wijzigen, plaats je urls in ja application.properties
     FixerKoersClient() {
         try {
             url = new URL("http://data.fixer.io/api/latest?access_key=50c41e4529e328e0e462ffc591f1feae&symbols=USD");
@@ -25,7 +27,12 @@ class FixerKoersClient implements KoersClient {
             throw new KoersClientException("Fixer URL is verkeerd");
         }
     }
+    een beter constructor(duidelijk veel minder code):
+     */
 
+    FixerKoersClient(@Value("${fixerKoersURL}") URL url) {
+        this.url = url;
+    }
     @Override
     public BigDecimal getDollarKoers() {
         try (var stream = url.openStream()) {

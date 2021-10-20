@@ -2,6 +2,7 @@ package be.vdab.luigi.restclients;
 
 import be.vdab.luigi.exceptions.KoersClientException;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -23,12 +24,21 @@ class ECBKoersClient implements KoersClient{
     private final XMLInputFactory factory = XMLInputFactory.newFactory();
     /*Deze factory is nodig om een XML stream reader te kunnen maken, die we later in de methodes zien*/
 
+    /* Deze constructor is niet aan te raden omdat URL kunnen wijzigen, plaats je urls in ja application.properties
+   
+
     ECBKoersClient() { //Constructor om url te initialiseren.
         try {
             url = new URL("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
         } catch (MalformedURLException ex) {
             throw new KoersClientException("ECB URL is verkeerd.", ex);
         }
+    }
+    betere manier voor contructor(duidelijk veel minder code):
+*/
+
+    ECBKoersClient(@Value("${ecbKoersURL}") URL url) {
+        this.url = url;
     }
 
     @Override
