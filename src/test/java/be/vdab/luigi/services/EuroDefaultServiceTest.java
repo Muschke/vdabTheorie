@@ -20,7 +20,10 @@ class EuroDefaultServiceTest {
     private EuroDefaultService euroService; // creatie mock object van type euroService
     @BeforeEach
     void beforeEach() {
-        euroService = new EuroDefaultService(koersClient); // toewijzen van mockobject koersclient aan EuroService constructor
+       // euroService = new EuroDefaultService(koersClient); --> toewijzen van mockobject koersclient aan EuroService constructor bij bepaalde restclients
+        // /* toewijzen ockobject koersclient aan EuroService constructor bij meerdere clients */
+        euroService = new EuroDefaultService(new KoersClient[] {koersClient});
+
     }
     @Test //wat we effectief gaan testen
     void naarDollar() {
