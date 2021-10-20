@@ -1,29 +1,26 @@
 package be.vdab.luigi.services;
 
 import be.vdab.luigi.restclients.KoersClient;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class) //Oproepen van mockito
-class EuroServiceTest {
+class EuroDefaultServiceTest {
     @Mock
     private KoersClient koersClient; // creatie mock object van type koersclient
-    private EuroService euroService; // creatie mock object van type euroService
+    private EuroDefaultService euroService; // creatie mock object van type euroService
     @BeforeEach
     void beforeEach() {
-        euroService = new EuroService(koersClient); // toewijzen van mockobject koersclient aan EuroService constructor
+        euroService = new EuroDefaultService(koersClient); // toewijzen van mockobject koersclient aan EuroService constructor
     }
     @Test //wat we effectief gaan testen
     void naarDollar() {

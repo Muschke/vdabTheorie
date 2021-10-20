@@ -13,10 +13,12 @@
     <d1>
         <dt>Nummer</dt>
         <dd th:text="*{id}"></dd>
-        <dt>Prijs</dt>
+        <dt>Prijs in euro</dt>
         <dd th:text="*{prijs}"></dd>
         <dt>Pikant</dt>
         <dd th:text="*{pikant} ? 'Ja' : 'Nee'"></dd>
+        <dt th:if="${InDollar}">In dollar</dt>
+        <dd th:if="${InDollar}" th:text="${InDollar}"></dd>
     </d1>
 </th:block>
 </body>

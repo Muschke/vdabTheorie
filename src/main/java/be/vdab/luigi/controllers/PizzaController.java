@@ -1,7 +1,8 @@
 package be.vdab.luigi.controllers;
 
 import be.vdab.luigi.domain.Pizza;
-import org.springframework.context.annotation.Conditional;
+import be.vdab.luigi.exceptions.KoersClientException;
+import be.vdab.luigi.services.EuroService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,13 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
 
 
 @Controller
@@ -32,6 +29,7 @@ class PizzaController {
             new Pizza(7 , "OliveSpecial", BigDecimal.valueOf(6), false),
             new Pizza(8, "ChickenBbq", BigDecimal.valueOf(7), true)
     };
+
     /*variabele bij getmapping prijzen, filtering van unieke prijzen in lijst*/
     private List<BigDecimal> uniekePrijzen() {
         return Arrays.stream(pizzas).map(Pizza::getPrijs).distinct().sorted()
@@ -43,6 +41,12 @@ class PizzaController {
                 .filter(pizza -> pizza.getPrijs().compareTo(prijs) == 0)
                 .collect(Collectors.toList());
     }
+    /*Oproepen van EuroService in deze controller*/
+    private final EuroService euroService;
+
+    PizzaController(EuroService euroService) {
+        this.euroService = euroService;
+    }
     @GetMapping
     public ModelAndView pizzas() {
         return new ModelAndView("pizzas", "pizzas", pizzas);
@@ -51,7 +55,14 @@ class PizzaController {
     public ModelAndView pizza(@PathVariable long id) {
         var modelAndView = new ModelAndView("pizza");
         Arrays.stream(pizzas).filter(pizza -> pizza.getId() == id).findFirst()
-                .ifPresent(pizza -> modelAndView.addObject("pizza", pizza));
+                .ifPresent(pizza -> {
+                    modelAndView.addObject("pizza", pizza);
+        try {
+            modelAndView.addObject("InDollar", euroService.naarDollar(pizza.getPrijs()));
+        } catch (KoersClientException ex) {
+
+            }
+        });
         return modelAndView;
     }
     /*getmapping voor prijzen, geeft lijst weer in die pagina met unieke prijzen*/
@@ -65,4 +76,6 @@ class PizzaController {
         return  new ModelAndView("prijzen", "pizzas", pizzasMetPrijs(prijs))
                 .addObject("prijzen", uniekePrijzen());
     }
+
+
 }

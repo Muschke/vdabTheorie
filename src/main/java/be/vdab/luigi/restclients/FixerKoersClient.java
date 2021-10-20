@@ -1,6 +1,7 @@
 package be.vdab.luigi.restclients;
 
 import be.vdab.luigi.exceptions.KoersClientException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -9,6 +10,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.regex.Pattern;
 
+/*We hebben 2 clients, spring weet niet welke te kiezen @Primary zou dit oplossen, maar dat werkt enkel bij 2 opties
+wij werken het daarom uit met @Qualifier, de keuze hiertussen word in de service bepaald*/
+@Qualifier("Fixer")
 @Component
 class FixerKoersClient implements KoersClient {
     private final static Pattern PATTERN = Pattern.compile("^.*\"USD\": *(\\d+\\.?\\d*).*$");
