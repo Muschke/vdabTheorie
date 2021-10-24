@@ -41,7 +41,7 @@ class JdbcPizzaRepository implements PizzaRepository{
     }
 
     @Override
-    /*het opdaten van meerdere records*/
+    /*het updaten van meerdere records*/
     public void update(Pizza pizza) {
         var sql = "update pizzas set naam=?, prijs=?, pikant=? where id = ?";
         if(template.update(sql, pizza.getNaam(), pizza.getPrijs(), pizza.isPikant(), pizza.getId()) == 0){
