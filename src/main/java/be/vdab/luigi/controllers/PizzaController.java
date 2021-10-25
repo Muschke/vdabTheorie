@@ -97,4 +97,9 @@ class PizzaController {
         return  new ModelAndView("prijzen", "pizzas", pizzaService.findByPrijs(prijs))
                 .addObject("prijzen", pizzaService.findUniekePrijzen());
     }
+    //methode om DTO te implementeren
+    @GetMapping("aantalPizzasPerPrijs")
+    public ModelAndView aantalPizzasPerPrijs() {
+        return new ModelAndView("aantalPizzasPerPrijs", "aantalpizzasperprijs", pizzaService.findAantalPizzasPerPrijs());
+    }
 }

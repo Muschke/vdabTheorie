@@ -148,4 +148,18 @@ class JdbcPizzaRepositoryTest extends AbstractTransactionalJUnit4SpringContextTe
         assertThat(repository.findByIds(Set.of(-1L, -2L))).isEmpty();
     }
 
+    @Test
+    void aantalPizzasPerPrijs() {
+        /*Eerste statement voert de functie uit, hierin moet nu lijst zitten van aantal pizzas per prijs*/
+        var aantalPizzasPerPrijs = repository.findAantalPizzasPerPrijs();
+        /*Nu gaan we testen of dat klopt. De eerste test is verifiëren dat onze lijst maximaal evenveel rijen heeft
+        * als er unieke prijzen zijn */
+        assertThat(aantalPizzasPerPrijs).hasSize(super.jdbcTemplate.queryForObject(
+                "select count(distinct prijs) from pizzas", Integer.class));
+        /*Nu halen we de eerste rij op van onze lijst. Nu het aantal in deze rij moet gelijk zijn aan het totaal
+        * aantal pizzas van die rij*/
+        var eersteRij = aantalPizzasPerPrijs.get(0);
+        assertThat(eersteRij.getAantal()).isEqualTo(super.countRowsInTableWhere(PIZZAS, "prijs =" + eersteRij.getPrijs()));
+    }
+
 }

@@ -1,5 +1,6 @@
 package be.vdab.luigi.services;
 
+import be.vdab.luigi.DTO.AantalPizzasPerPrijs;
 import be.vdab.luigi.domain.Pizza;
 import be.vdab.luigi.repositories.PizzaRepository;
 import org.springframework.stereotype.Service;
@@ -72,6 +73,13 @@ class DefaultPizzaService implements PizzaService{
     @Override
     @Transactional(readOnly = true)
     public List<Pizza> findByids(Set<Long> ids) {
-        return findByids(ids);
+        return pizzaRepository.findByIds(ids);
+    }
+
+    //methode DTO
+    @Override
+    @Transactional(readOnly = true)
+    public List<AantalPizzasPerPrijs> findAantalPizzasPerPrijs () {
+        return pizzaRepository.findAantalPizzasPerPrijs();
     }
 }

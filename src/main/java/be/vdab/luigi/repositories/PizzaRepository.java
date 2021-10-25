@@ -1,5 +1,6 @@
 package be.vdab.luigi.repositories;
 
+import be.vdab.luigi.DTO.AantalPizzasPerPrijs;
 import be.vdab.luigi.domain.Pizza;
 
 import java.math.BigDecimal;
@@ -18,4 +19,6 @@ public interface PizzaRepository {
     List<BigDecimal> findUniekePrijzen();
     List<Pizza> findByPrijs(BigDecimal prijs);
     List<Pizza> findByIds (Set<Long> ids);
+    //Om DTO uit te kunnen voeren
+    List<AantalPizzasPerPrijs> findAantalPizzasPerPrijs();
 }

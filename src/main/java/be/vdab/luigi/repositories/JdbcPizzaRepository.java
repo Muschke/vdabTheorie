@@ -1,5 +1,6 @@
 package be.vdab.luigi.repositories;
 
+import be.vdab.luigi.DTO.AantalPizzasPerPrijs;
 import be.vdab.luigi.domain.Pizza;
 import be.vdab.luigi.exceptions.PizzaNietGevondenException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -113,5 +114,16 @@ class JdbcPizzaRepository implements PizzaRepository{
         var sql = "select id, naam, prijs, pikant from pizzas where id in (?,".repeat(ids.size()-1) + "?) order by id";
         return template.query(sql, pizzaMapper, ids.toArray());
         /*De logica hiervan is moeilijk te begrijpen en kan je best gewoon vanbuiten leren*/
+    }
+
+    //voor DTO
+    @Override
+    public List<AantalPizzasPerPrijs> findAantalPizzasPerPrijs() {
+        var sql = "select prijs, count(*) as aantal from pizzas group by prijs order by prijs";
+        /*Onderstaande variabele zou je ook vanboven tussen de variabele kunnen plaatsen. Omdat we hem maar 1 keer gebruiken
+        * plaatsen we hem hier*/
+        RowMapper<AantalPizzasPerPrijs> mapper = (result, rowNum) ->
+                new AantalPizzasPerPrijs(result.getBigDecimal("prijs"), result.getInt("aantal"));
+        return template.query(sql,mapper);
     }
 }
