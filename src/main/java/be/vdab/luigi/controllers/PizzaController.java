@@ -1,7 +1,7 @@
 package be.vdab.luigi.controllers;
 
-import be.vdab.luigi.domain.Pizza;
 import be.vdab.luigi.exceptions.KoersClientException;
+import be.vdab.luigi.forms.VanTotPrijsForm;
 import be.vdab.luigi.services.EuroService;
 import be.vdab.luigi.services.PizzaService;
 import org.slf4j.Logger;
@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -101,5 +98,18 @@ class PizzaController {
     @GetMapping("aantalPizzasPerPrijs")
     public ModelAndView aantalPizzasPerPrijs() {
         return new ModelAndView("aantalPizzasPerPrijs", "aantalpizzasperprijs", pizzaService.findAantalPizzasPerPrijs());
+    }
+
+    //om form aan vantotprijs.html door te geven
+    @GetMapping("vantotprijs/form")
+    public ModelAndView vanTotPrijsForm() {
+        return new ModelAndView("vantotprijs")
+                .addObject(new VanTotPrijsForm(BigDecimal.ONE, BigDecimal.TEN));
+        /*Als je lege invulvakken wenst, geef je tweemaal null in*/
+    }
+    //verwerken van request van ingevulde form
+    @GetMapping("vantotprijs")
+    public ModelAndView vanTotPrijs(VanTotPrijsForm form) {
+        return new ModelAndView("vantotprijs", "pizzas", pizzaService.findByPrijsBetween(form.getVan(), form.getTot()));
     }
 }
