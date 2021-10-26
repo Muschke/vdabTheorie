@@ -5,8 +5,10 @@
 <nav th:replace="fragments::menu"></nav>
 <h1>Van tot prijs</h1>
 <form th:object="${vanTotPrijsForm}" method="get" th:action="@{/pizzas/vantotprijs}">
-    <label>Van:<input th:field="*{van}" autofocus></input></label>
-    <label>Tot:<input th:field="*{tot}"></input></label>
+ <!--Onderstaande error boodschap geeft een (voor gebruiker) onbegrijpbare boodschap door, deze boodschap kunnen we
+ overschrijven in ons bestand messages.properties-->
+    <label>Van:<span th:errors="*{van}"></span><input th:field="*{van}" autofocus type="number" required min="0"></input></label>
+    <label>Tot:<span th:errors="*{tot}"></span><input th:field="*{tot}" type="number" required min="0"></input></label>
     <button>Zoeken</button>
 </form>
 

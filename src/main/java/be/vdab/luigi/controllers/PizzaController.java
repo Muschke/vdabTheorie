@@ -7,11 +7,13 @@ import be.vdab.luigi.services.PizzaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 
 
@@ -107,9 +109,16 @@ class PizzaController {
                 .addObject(new VanTotPrijsForm(BigDecimal.ONE, BigDecimal.TEN));
         /*Als je lege invulvakken wenst, geef je tweemaal null in*/
     }
-    //verwerken van request van ingevulde form
+    /*verwerken van request van ingevulde form
+    *   je gaat hier ook errors opvangen, zodat je niet op errorpagina terechtkomt wanneer iemand foute waardes in je formulier ingeeft*/
     @GetMapping("vantotprijs")
-    public ModelAndView vanTotPrijs(VanTotPrijsForm form) {
-        return new ModelAndView("vantotprijs", "pizzas", pizzaService.findByPrijsBetween(form.getVan(), form.getTot()));
+    public ModelAndView vanTotPrijs(@Valid VanTotPrijsForm form, Errors errors) {
+        var modelAndView = new ModelAndView("vantotprijs");
+        /*met onderstaande if-clause vermijden we dat een fout ingevuld formulier leid tot een foutpagina, je wordt dan
+        * gewoon teruggeleid naar het formulier. Het lijkt als gebruiker alsof hij op de pagina blijft */
+        if(errors.hasErrors()) {
+            return modelAndView;
+        }
+        return modelAndView.addObject("pizzas", pizzaService.findByPrijsBetween(form.getVan(), form.getTot()));
     }
 }
