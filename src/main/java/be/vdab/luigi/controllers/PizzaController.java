@@ -1,5 +1,6 @@
 package be.vdab.luigi.controllers;
 
+import be.vdab.luigi.domain.Pizza;
 import be.vdab.luigi.exceptions.KoersClientException;
 import be.vdab.luigi.forms.VanTotPrijsForm;
 import be.vdab.luigi.services.EuroService;
@@ -10,8 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -120,5 +123,19 @@ class PizzaController {
             return modelAndView;
         }
         return modelAndView.addObject("pizzas", pizzaService.findByPrijsBetween(form.getVan(), form.getTot()));
+    }
+    /*om form aan pizzaToevoegen door te geven, voor uiteindelijk POST request*/
+    @GetMapping("toevoegen/form")
+    public ModelAndView toevoegenForm() {
+        return new ModelAndView("toevoegen").addObject(new Pizza(0,"",null,false));
+    }
+    /*methode om post form request te verwerken*/
+    @PostMapping
+    public String toevoegen(@Valid Pizza pizza, Errors errors, RedirectAttributes redirect) {
+        if (errors.hasErrors()) {
+            return "toevoegen";
+        }
+        redirect.addAttribute("idNieuwePizza", pizzaService.create(pizza));
+        return "redirect:/pizzas";
     }
 }
