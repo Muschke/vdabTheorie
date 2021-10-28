@@ -20,6 +20,9 @@
         <dt th:if="${InDollar}">In dollar</dt>
         <dd th:if="${InDollar}" th:text="${InDollar}"></dd>
     </d1>
+    <form method="post" th:action="@{/mandje/{id}(id=*{id})}">
+        <button>In mandje</button>
+    </form>
 </th:block>
 </body>
 </html>
