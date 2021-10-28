@@ -14,11 +14,18 @@
         <dt>Nummer</dt>
         <dd th:text="*{id}"></dd>
         <dt>Prijs in euro</dt>
-        <dd th:text="*{prijs}"></dd>
+        <dd th:text="*{{prijs}}"></dd>
         <dt>Pikant</dt>
         <dd th:text="*{pikant} ? 'Ja' : 'Nee'"></dd>
+        <!--Je laat je prijzen opmaken in de gewenste vorm door je patroon op te roepen door de dubbele {{}}
+        nu wil je dit ook doen met je prijzen in dollar, maar dat gaat niet ,want daar heb je geen object van om @numberFormat
+        op uit te roepen. Je kan die oplossen door hier in html de opmaak te bepalen-->
         <dt th:if="${InDollar}">In dollar</dt>
-        <dd th:if="${InDollar}" th:text="${InDollar}"></dd>
+        <dd th:if="${InDollar}" th:text="${#numbers.formatDecimal(InDollar,1,2)}"></dd>
+                                        <!--Je gebruikt formatDecimal functie.
+                                            - parameter 1: op te maken getal
+                                            - parameter 2: minimum aantal cijfers voor de komma
+                                            - parameter 3: aantal cijfers na de komma-->
     </d1>
     <form method="post" th:action="@{/mandje/{id}(id=*{id})}">
         <button>In mandje</button>
